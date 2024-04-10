@@ -1,0 +1,19 @@
+version: "3"
+services:
+  app:
+    container_name: shareExpensesAppCaiola
+    build: .
+    command: nodemon --watch /usr/src/app -e js app.js
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/usr/src/app
+    links:
+      - "mongo:mongosrv"
+  mongo:
+    container_name: shareExpensesMongoCaiola
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
