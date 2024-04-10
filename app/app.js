@@ -7,7 +7,9 @@ const app = express("");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cookieParser());
-app.use("/api/expenses", router);
+app.use("/api/budget", router);
+//app.use("/api/balance", ?);
+//app.use("/api/users", ?);
 app.use("/api/auth", auth);
 
 app.listen(3000, () => {
