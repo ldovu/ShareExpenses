@@ -197,6 +197,10 @@ const app = createApp({
         username: this.username,
         password: this.password,
       };
+      if (this.username === "" || this.password === "") {
+        this.errorMessage = "Fill all the fields";
+        return;
+      }
 
       const response = await fetch("api/auth/signin", {
         method: "POST",
@@ -209,6 +213,7 @@ const app = createApp({
       if (response.ok) {
         const data = await response.json();
         this.successMessage = data.message;
+        console.log(data.message);
 
         this.switchView("userExpenses");
         this.loggedUserExpenses();
@@ -219,10 +224,22 @@ const app = createApp({
         this.message = "";
       } else {
         const error = await response.json();
+        console.log(error.message);
         this.errorMessage = error.message;
         console.error("Error:", error.message);
       }
     },
+
+    async getVerifica() {
+      const response = await fetch("api/verifica");
+      if (response.ok) {
+        const username = await response.json();
+        console.log("req.session.username: ", username);
+      } else {
+        console.error("Error:", await response.text());
+      }
+    },
+    
 
     // Get all the users existing in the database
     async getAllUser() {
