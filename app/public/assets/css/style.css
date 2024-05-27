@@ -1,0 +1,547 @@
+.nunito-sans-appCaiola {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  font-variation-settings: "wdth" 100, "YTLC" 500;
+}
+
+.container-login {
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+@media (max-height: 600px) {
+  .container-login {
+    height: auto;
+    padding: 20px 0;
+  }
+}
+.login-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.password-field {
+  position: relative;
+}
+.btn-login {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  align-content: center;
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  margin: 4px auto;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.login-redirect-registration {
+  text-align: center;
+  font-size: 14px;
+  order: 1;
+}
+
+.login-redirect-registration a.register-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.alert-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: 7px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-signin {
+  height: 175px;
+
+  overflow: auto;
+  align-items: center;
+  border: 1px solid lightgray; /* border light gray */
+  background-color: #f9f9f9; /* lighter gray */
+  border-radius: 5px;
+  padding: 20px;
+  margin: auto;
+  width: 100%;
+}
+
+.container-registration {
+  max-width: 500px;
+  min-width: 300px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
+.form-signup {
+  max-width: 500px;
+  min-width: 300px;
+  width: 100%;
+  align-items: center;
+  border: 1px solid lightgray; 
+  background-color: #f9f9f9; 
+  border-radius: 5px;
+  padding: 20px;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.success-message {
+  color: #0a3622;
+  background-color: #a3cfbb;
+  border-color: #a3cfbb;
+  padding: 7px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-height: 600px) {
+  .container-registration {
+    height: auto;
+    padding: 20px 0;
+  }
+  .form-signup,
+  .alert {
+    padding: 10px;
+  }
+}
+
+.form-group-reg {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-group-reg label {
+  flex: 1;
+  text-align: left;
+  margin-right: 2;
+}
+
+.form-group-reg .form-control {
+  flex: 2;
+  align-items: right;
+}
+
+.bi-login {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-55%);
+  cursor: pointer;
+}
+.bi-registration {
+  position: absolute;
+  top: 50%;
+  right: 22px;
+  transform: translateY(-55%);
+  cursor: pointer;
+}
+
+.d-none {
+  display: none;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8vh; 
+}
+
+.dropdown-profile {
+  padding: 0;
+}
+
+.small-font,
+.fs-5,
+.small-input,
+.small-button {
+  font-size: 14px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group .form-label {
+  margin-right: 20px;
+}
+.input-group-text {
+  border-top-right-radius: 1px;
+  border-bottom-right-radius: 1px;
+}
+
+.label {
+  display: inline-block;
+  width: 100px;
+  text-align: left;
+  margin-right: 10px;
+}
+
+.value {
+  display: inline-block;
+}
+
+.dropdown-profile {
+  padding: 4px 10px; 
+  font-size: 12px;
+}
+
+.smaller-button {
+  padding: 6px 8px; 
+  font-size: 12px; 
+}
+header button,
+header li {
+  font-size: 14px; 
+}
+
+.alert-danger {
+  width: 100%;
+  padding: 6px 16px;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 14px;
+}
+
+header a {
+  appearance: none;
+  backface-visibility: hidden;
+  background-color: #fafbfc;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
+    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #24292e;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    Ubuntu, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 6px 16px;
+  position: relative;
+  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: break-word;
+}
+
+header a:disabled {
+  background-color: #fafbfc;
+  border-color: rgba(27, 31, 35, 0.15);
+  color: #959da5;
+  cursor: default;
+}
+
+header a:active {
+  background-color: #edeff2;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
+}
+
+header a:focus {
+  outline: 1px transparent;
+}
+
+header .nav-item a:not(.dropdown-item),
+.button-9 {
+  appearance: none;
+  background-color: #fafbfc;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
+    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #24292e;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 6px 16px;
+  position: relative;
+  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: break-word;
+  text-align: center;
+  margin-right: 2px;
+  text-decoration: none; 
+}
+
+header .nav-item a:not(.dropdown-item):hover,
+.button-9:hover {
+  background-color: #dadcf1;
+  text-decoration: none;
+  transition-duration: 0.1s;
+}
+
+header .nav-item a:not(.dropdown-item):disabled .button-9:disabled {
+  background-color: #fafbfc;
+  border-color: rgba(27, 31, 35, 0.15);
+  color: #959da5;
+  cursor: default;
+}
+
+header .nav-item a:not(.dropdown-item):active .button-9:active {
+  background-color: #edeff2;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
+}
+
+header .nav-item a:not(.dropdown-item):focus,
+.back-button:focus {
+  outline: 1px transparent;
+}
+
+.col-12 .span-search-input {
+  font-size: 14px;
+}
+.col-12 .btn-outline-success-search {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+.col-12 .form-control-search-input {
+  margin-right: 5px;
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.table-sm {
+  font-size: 14px;
+}
+
+.table-sm td,
+.table-sm th {
+  padding: 4.8px;
+}
+
+@media screen and (max-width: 600px) {
+  .table {
+    width: 50%;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}
+
+.container-filter-sm,
+.table-responsive {
+  max-width: 60%; 
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* media queries to adjust table at different screen sizes
+   for the responsiveness of the table
+*/
+@media (min-width: 576px) {
+  .container-filter-sm,
+  .table-responsive {
+    max-width: 100%; 
+  }
+}
+
+@media (min-width: 768px) {
+  .container-filter-sm,
+  .table-responsive {
+    max-width: 600px; 
+  }
+}
+
+@media (min-width: 992px) {
+  .container-filter-sm,
+  .table-responsive {
+    max-width: 800px; /
+  }
+}
+
+@media (min-width: 1200px) {
+  .container-filter-sm,
+  .table-responsive {
+    max-width: 1000px;
+  }
+}
+
+.filter-expense-form {
+  width: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-nav {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.dropdown .custom-dropdown {
+  color: black;
+}
+
+/* Logo image */
+.image-logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image-logo-dashboard {
+  margin-right: 20px;
+  width: 45px;
+  height: 45px;
+}
+
+/* Register and login word in initial pages */
+a.nav-link {
+  cursor: pointer;
+}
+
+.form-label-white {
+  color: white;
+  margin-bottom: 8px;
+}
+
+.container-sm .full-width-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+/* add expense element */
+.confirm-add-user-button {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+.row-split-differently {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+/* Submit button used in many view of the app */
+.submit-button {
+  appearance: none;
+  backface-visibility: hidden;
+  background-color: #047bfb; 
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
+    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #eaf6f8; 
+  cursor: pointer;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+    Ubuntu, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 6px 16px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transform: translateZ(0);
+  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 100%;
+}
+
+.submit-button:disabled {
+  background-color: #3373aa; 
+  border-color: rgba(27, 31, 35, 0.15);
+  color: #959da5;
+  cursor: default;
+}
+
+.submit-button:hover {
+  background-color: #1f74ca; 
+  text-decoration: none;
+  transition-duration: 0.1s;
+}
+
+.submit-button:active {
+  background-color: #1f74ca;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
+}
+.submit-button:focus {
+  outline: 1px transparent;
+}
+
+/* Research button */
+.btn-outline-success-search {
+  color: #e39a09;
+  border-color: #e39a09;
+}
+
+.btn-outline-success-search:hover {
+  color: #fff;
+  background-color: #e39a09;
+  border-color: #e39a09;
+}
+.btn-outline-success-search:active {
+  color: #fff;
+  background-color: #e2a11f;
+  border-color: #e2a11f;
+}
+.btn-outline-success-search:focus {
+  outline: 1px transparent;
+}

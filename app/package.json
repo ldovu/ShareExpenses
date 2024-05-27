@@ -1,20 +1,22 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "description": "Web application for sharing expenses with friends and family",
+  "description": "Web application for tracking expenses",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "shareExpenses"
+    "url": "ShareExpenses"
   },
   "author": "Ludovica Caiola",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.6.1"
   }
 }
