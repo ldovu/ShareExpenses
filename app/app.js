@@ -66,11 +66,6 @@ const verifyAuthentication = (req, res, next) => {
   }
 };
 
-// Funzione che invia il req.session.username
-app.get("/api/verifica", verifyAuthentication, (req, res) => {
-  res.json({ username: req.session.username });
-});
-
 // Get all the expense of the logged user
 app.get("/api/budget", verifyAuthentication, async (req, res) => {
   try {
