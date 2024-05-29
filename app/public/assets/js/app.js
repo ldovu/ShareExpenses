@@ -239,7 +239,6 @@ const app = createApp({
         console.error("Error:", await response.text());
       }
     },
-    
 
     // Get all the users existing in the database
     async getAllUser() {
@@ -570,14 +569,16 @@ const app = createApp({
             this.users.push(user.username);
           }
         });
-        console.log(this.users);
-        this.users = Object.values(this.users);
+        console.log("This.users from get users function", this.users);
+        // this.users = Object.values(this.users);
         this.errorMessageUser = "";
         this.errorMessageQuote = "";
       } catch (error) {
         console.error("Error:", error);
       }
     },
+
+
 
     // Get users expenses by year
     async getExpensesByYear() {
@@ -807,6 +808,9 @@ const app = createApp({
             "Content-Type": "application/json",
           },
         });
+        console.log(username);
+        console.log(otherUsername);
+
         if (response.ok) {
           const data = await response.json();
           console.log(data);
@@ -959,6 +963,7 @@ const app = createApp({
       });
       if (response.ok) {
         console.log("logout successful");
+        this.reset();
         this.currentView = "login";
       } else {
         console.error("Error:", await response.text());

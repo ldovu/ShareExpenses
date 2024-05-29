@@ -1,7 +1,7 @@
 const express = require("express");
 const fs = require("fs/promises");
 const { ObjectId } = require("mongodb");
-//const jwt = require("jsonwebtoken");
+const { query } = require("express-validator");
 const db = require("./db.js");
 const session = require("express-session");
 const app = express();
@@ -68,98 +68,115 @@ const verifyAuthentication = (req, res, next) => {
 
 // Get all the expense of the logged user
 app.get("/api/budget", verifyAuthentication, async (req, res) => {
-  try {
-    const mongo = await db.connectToDatabase();
-    const username = req.session.username;
-    const expenses = await mongo
-      .collection("expenses")
-      .find({
-        $or: [
-          { "userList.payer.user": username },
-          { "userList.splits": { $elemMatch: { user: username } } },
-        ],
-      })
-      .toArray();
-    res.json(expenses);
-  } catch (error) {
-    console.error(error.stack);
-    res.status(500).json({ msg: error.message });
-  }
+  const mongo = await db.connectToDatabase();
+  const username = req.session.username;
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $or: [
+        { "userList.payer.user": username },
+        { "userList.splits": { $elemMatch: { user: username } } },
+      ],
+    })
+    .toArray();
+  res.json(expenses);
 });
 
 // Get the expenses of the logged user for the specified year
 app.get("/api/budget/:year", verifyAuthentication, async (req, res) => {
-  try {
-    const mongo = await db.connectToDatabase();
-    const username = req.session.username;
-    const year = req.params.year;
-    const expenses = await mongo
-      .collection("expenses")
-      .find({
-        $and: [
-          {
-            $or: [
-              { "userList.payer.user": username },
-              {
-                "userList.splits": {
-                  $elemMatch: { user: username },
-                },
+  const mongo = await db.connectToDatabase();
+  const username = req.session.username;
+  const year = req.params.year;
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $and: [
+        {
+          $or: [
+            { "userList.payer.user": username },
+            {
+              "userList.splits": {
+                $elemMatch: { user: username },
               },
-            ],
-          },
-          { year: year },
-        ],
-      })
-      .toArray();
+            },
+          ],
+        },
+        { year: year },
+      ],
+    })
+    .toArray();
 
-    res.json(expenses);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
-  }
+  res.json(expenses);
 });
 
 // Get the expenses of the logged user for the specified year and month
 app.get("/api/budget/:year/:month", verifyAuthentication, async (req, res) => {
-  try {
-    const mongo = await db.connectToDatabase();
-    const username = req.session.username;
-    const year = req.params.year;
-    const month = req.params.month;
-    const expenses = await mongo
-      .collection("expenses")
-      .find({
-        $and: [
-          {
-            $or: [
-              { "userList.payer.user": username },
-              {
-                "userList.splits": {
-                  $elemMatch: { user: username },
-                },
+  const mongo = await db.connectToDatabase();
+  const username = req.session.username;
+  const year = req.params.year;
+  const month = req.params.month;
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $and: [
+        {
+          $or: [
+            { "userList.payer.user": username },
+            {
+              "userList.splits": {
+                $elemMatch: { user: username },
               },
-            ],
-          },
-          { year: year },
-          { month: month },
-        ],
-      })
-      .toArray();
+            },
+          ],
+        },
+        { year: year },
+        { month: month },
+      ],
+    })
+    .toArray();
 
-    res.json(expenses);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
-  }
+  res.json(expenses);
 });
 
 // Extra function for getting the expenses of the logged user by year, month and id
 app.get("/api/budget/:year/:month/:id", async (req, res) => {
-  try {
+  const mongo = await db.connectToDatabase();
+  const username = req.session.username;
+  const year = req.params.year;
+  const month = req.params.month;
+  const id = req.params.id;
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $and: [
+        {
+          $or: [
+            { "userList.payer.user": username },
+            {
+              "userList.splits": {
+                $elemMatch: { user: username },
+              },
+            },
+          ],
+        },
+        { year: year },
+        { month: month },
+        { _id: new ObjectId(id) },
+      ],
+    })
+    .toArray();
+
+  res.json(expenses);
+});
+
+// Extra function for getting the expenses of the logged user by year and id
+app.get(
+  "/api/extraFunction1/:year/:id",
+  verifyAuthentication,
+  async (req, res) => {
     const mongo = await db.connectToDatabase();
     const username = req.session.username;
     const year = req.params.year;
-    const month = req.params.month;
     const id = req.params.id;
     const expenses = await mongo
       .collection("expenses")
@@ -176,54 +193,12 @@ app.get("/api/budget/:year/:month/:id", async (req, res) => {
             ],
           },
           { year: year },
-          { month: month },
           { _id: new ObjectId(id) },
         ],
       })
       .toArray();
 
     res.json(expenses);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
-  }
-});
-
-// Extra function for getting the expenses of the logged user by year and id
-app.get(
-  "/api/extraFunction1/:year/:id",
-  verifyAuthentication,
-  async (req, res) => {
-    try {
-      const mongo = await db.connectToDatabase();
-      const username = req.session.username;
-      const year = req.params.year;
-      const id = req.params.id;
-      const expenses = await mongo
-        .collection("expenses")
-        .find({
-          $and: [
-            {
-              $or: [
-                { "userList.payer.user": username },
-                {
-                  "userList.splits": {
-                    $elemMatch: { user: username },
-                  },
-                },
-              ],
-            },
-            { year: year },
-            { _id: new ObjectId(id) },
-          ],
-        })
-        .toArray();
-
-      res.json(expenses);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: "Internal error" });
-    }
   }
 );
 
@@ -232,36 +207,31 @@ app.get(
   "/api/extraFunction2/:month/:id",
   verifyAuthentication,
   async (req, res) => {
-    try {
-      const mongo = await db.connectToDatabase();
-      const username = req.session.username;
-      const month = req.params.month;
-      const id = req.params.id;
-      const expenses = await mongo
-        .collection("expenses")
-        .find({
-          $and: [
-            {
-              $or: [
-                { "userList.payer.user": username },
-                {
-                  "userList.splits": {
-                    $elemMatch: { user: username },
-                  },
+    const mongo = await db.connectToDatabase();
+    const username = req.session.username;
+    const month = req.params.month;
+    const id = req.params.id;
+    const expenses = await mongo
+      .collection("expenses")
+      .find({
+        $and: [
+          {
+            $or: [
+              { "userList.payer.user": username },
+              {
+                "userList.splits": {
+                  $elemMatch: { user: username },
                 },
-              ],
-            },
-            { month: month },
-            { _id: new ObjectId(id) },
-          ],
-        })
-        .toArray();
+              },
+            ],
+          },
+          { month: month },
+          { _id: new ObjectId(id) },
+        ],
+      })
+      .toArray();
 
-      res.json(expenses);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: "Internal error" });
-    }
+    res.json(expenses);
   }
 );
 
@@ -270,38 +240,9 @@ app.get(
   "/api/extraFunction3/:month",
   verifyAuthentication,
   async (req, res) => {
-    try {
-      const mongo = await db.connectToDatabase();
-      const username = req.session.username;
-      const month = req.params.month;
-      const expenses = await mongo
-        .collection("expenses")
-        .find({
-          $and: [
-            {
-              $or: [
-                { "userList.payer.user": username },
-                { "userList.splits": { $elemMatch: { user: username } } },
-              ],
-            },
-            { month: month },
-          ],
-        })
-        .toArray();
-      res.json(expenses);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: "Internal error" });
-    }
-  }
-);
-
-// Extra function for getting the expenses of the logged user by id
-app.get("/api/extraFunction4/:id", verifyAuthentication, async (req, res) => {
-  try {
     const mongo = await db.connectToDatabase();
     const username = req.session.username;
-    const id = req.params.id;
+    const month = req.params.month;
     const expenses = await mongo
       .collection("expenses")
       .find({
@@ -312,16 +253,35 @@ app.get("/api/extraFunction4/:id", verifyAuthentication, async (req, res) => {
               { "userList.splits": { $elemMatch: { user: username } } },
             ],
           },
-          { _id: new ObjectId(id) },
+          { month: month },
         ],
       })
       .toArray();
-
     res.json(expenses);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
   }
+);
+
+// Extra function for getting the expenses of the logged user by id
+app.get("/api/extraFunction4/:id", verifyAuthentication, async (req, res) => {
+  const mongo = await db.connectToDatabase();
+  const username = req.session.username;
+  const id = req.params.id;
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $and: [
+        {
+          $or: [
+            { "userList.payer.user": username },
+            { "userList.splits": { $elemMatch: { user: username } } },
+          ],
+        },
+        { _id: new ObjectId(id) },
+      ],
+    })
+    .toArray();
+
+  res.json(expenses);
 });
 
 // Add an expense for the specified year and month
@@ -329,47 +289,42 @@ app.post(
   "/api/budget/:year/:month/",
   verifyAuthentication,
   async (req, res) => {
-    try {
-      const year = req.params.year;
-      const month = req.params.month;
-      const day = req.body.day;
-      const description = req.body.description;
-      const category = req.body.category;
-      const totalCost = req.body.totalCost;
-      const userList = req.body.usersList;
+    const year = req.params.year;
+    const month = req.params.month;
+    const day = req.body.day;
+    const description = req.body.description;
+    const category = req.body.category;
+    const totalCost = req.body.totalCost;
+    const userList = req.body.usersList;
 
-      if (
-        !year ||
-        year == "" ||
-        !month ||
-        month == "" ||
-        !day ||
-        !description ||
-        !category ||
-        month < 1 ||
-        month > 12 ||
-        day < 1 ||
-        day > 31
-      ) {
-        return res.status(400).json({ message: "All fields must be filled" });
-      }
-      const mongo = await db.connectToDatabase();
-      const expense = {
-        year,
-        month,
-        day,
-        description,
-        category,
-        totalCost,
-        userList,
-      };
-      result = await mongo.collection("expenses").insertOne(expense);
-      console.log(result);
-      return { message: "Expense created successfully" };
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal error" });
+    if (
+      !year ||
+      year == "" ||
+      !month ||
+      month == "" ||
+      !day ||
+      !description ||
+      !category ||
+      month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      day > 31
+    ) {
+      return res.status(400).json({ message: "All fields must be filled" });
     }
+    const mongo = await db.connectToDatabase();
+    const expense = {
+      year,
+      month,
+      day,
+      description,
+      category,
+      totalCost,
+      userList,
+    };
+    result = await mongo.collection("expenses").insertOne(expense);
+    console.log(result);
+    return { message: "Expense created successfully" };
   }
 );
 
@@ -378,51 +333,46 @@ app.put(
   "/api/budget/:year/:month/:id",
   verifyAuthentication,
   async (req, res) => {
-    try {
-      const year = req.params.year;
-      const month = req.params.month;
-      const id = req.params.id;
+    const year = req.params.year;
+    const month = req.params.month;
+    const id = req.params.id;
 
-      const day = req.body.day;
-      const description = req.body.description;
-      const category = req.body.category;
-      const totalCost = req.body.totalCost;
-      const userList = req.body.usersList;
+    const day = req.body.day;
+    const description = req.body.description;
+    const category = req.body.category;
+    const totalCost = req.body.totalCost;
+    const userList = req.body.usersList;
 
-      if (
-        !day ||
-        !description ||
-        !category ||
-        month < 1 ||
-        month > 12 ||
-        day < 1 ||
-        day > 31
-      ) {
-        return res.status(400).json({ message: "All fields must be filled" });
-      }
+    if (
+      !day ||
+      !description ||
+      !category ||
+      month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      day > 31
+    ) {
+      return res.status(400).json({ message: "All fields must be filled" });
+    }
 
-      const mongo = await db.connectToDatabase();
-      const result = await mongo.collection("expenses").updateOne(
-        {
-          _id: new ObjectId(id),
-          year: year,
-          month: month,
-        },
-        { $set: { day, description, category, totalCost, userList } } // update the expense with the new values
-      );
-      if (result.modifiedCount === 1) {
-        res
-          .status(200)
-          .json({ message: "Expense updated successfully", result: result });
-      } else {
-        res.status(404).json({
-          message: "Expense not found",
-          modifiedCount: result.modifiedCount,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ msg: "Internal error" });
+    const mongo = await db.connectToDatabase();
+    const result = await mongo.collection("expenses").updateOne(
+      {
+        _id: new ObjectId(id),
+        year: year,
+        month: month,
+      },
+      { $set: { day, description, category, totalCost, userList } } // update the expense with the new values
+    );
+    if (result.modifiedCount === 1) {
+      res
+        .status(200)
+        .json({ message: "Expense updated successfully", result: result });
+    } else {
+      res.status(404).json({
+        message: "Expense not found",
+        modifiedCount: result.modifiedCount,
+      });
     }
   }
 );
@@ -432,128 +382,112 @@ app.delete(
   "/api/budget/:year/month/:id",
   verifyAuthentication,
   async (req, res) => {
-    try {
-      const mongo = await db.connectToDatabase();
-      const year = req.params.year;
-      const month = req.params.month;
-      const id = req.params.id;
-      const result = await mongo
-        .collection("expenses")
-        .deleteOne({ _id: new ObjectId(id), year: year, month: month });
-      if (result.deletedCount === 0) {
-        res.status(404).json({ msg: "Expense not found" });
-      } else {
-        res.json({ msg: "Expense deleted successfully" });
-      }
-    } catch (error) {
-      res.status(500).json({ msg: "Internal error" });
+    const mongo = await db.connectToDatabase();
+    const year = req.params.year;
+    const month = req.params.month;
+    const id = req.params.id;
+    const result = await mongo
+      .collection("expenses")
+      .deleteOne({ _id: new ObjectId(id), year: year, month: month });
+    if (result.deletedCount === 0) {
+      res.status(404).json({ msg: "Expense not found" });
+    } else {
+      res.json({ msg: "Expense deleted successfully" });
     }
   }
 );
 
 // Get the overall balance of the logged user
 app.get("/api/balance", verifyAuthentication, async (req, res) => {
-  try {
-    const username = req.session.username;
-    const mongo = await db.connectToDatabase();
-    const expenses = await mongo
-      .collection("expenses")
-      .find({
-        $or: [
-          { "userList.payer.user": username },
-          { "userList.splits": { $elemMatch: { user: username } } },
-        ],
-      })
-      .toArray();
+  const username = req.session.username;
+  const mongo = await db.connectToDatabase();
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $or: [
+        { "userList.payer.user": username },
+        { "userList.splits": { $elemMatch: { user: username } } },
+      ],
+    })
+    .toArray();
 
-    let credits = 0;
-    let debits = 0;
-    // per tutte le spese, se l'utente loggato è colui che ha pagato
-    // allora sommo le quote degli utenti della spesa al credito
-    // altrimenti sommo le quote dell'utente loggato al debito
-    // laddove è presente nella lista degli splits
-    expenses.forEach((expense) => {
-      if (expense.userList.payer.user === username) {
-        credits += expense.userList.splits.reduce(
-          (total, split) => total + split.quote,
-          0
-        );
-      } else {
-        debits += expense.userList.splits.reduce(
-          (total, split) =>
-            split.user === username ? total + split.quote : total,
-          0
-        );
-      }
-    });
-    const balance = credits - debits;
-    res.json({ expenses, debits, credits, balance });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
-  }
+  let credits = 0;
+  let debits = 0;
+  // per tutte le spese, se l'utente loggato è colui che ha pagato
+  // allora sommo le quote degli utenti della spesa al credito
+  // altrimenti sommo le quote dell'utente loggato al debito
+  // laddove è presente nella lista degli splits
+  expenses.forEach((expense) => {
+    if (expense.userList.payer.user === username) {
+      credits += expense.userList.splits.reduce(
+        (total, split) => total + split.quote,
+        0
+      );
+    } else {
+      debits += expense.userList.splits.reduce(
+        (total, split) =>
+          split.user === username ? total + split.quote : total,
+        0
+      );
+    }
+  });
+  const balance = credits - debits;
+  res.json({ expenses, debits, credits, balance });
 });
 
 // Get the balance between the logged user and another user
 app.get("/api/balance/:id", verifyAuthentication, async (req, res) => {
-  try {
-    const username = req.session.username;
-    const otherUserId = req.params.id;
-    const mongo = await db.connectToDatabase();
-    const otherUserName = await mongo.collection("users").findOne({
-      _id: new ObjectId(otherUserId),
-    });
-    const otherUserUsername = otherUserName.username;
-    const expenses = await mongo
-      .collection("expenses")
-      .find({
-        $or: {
-          $and: [
-            { "userList.payer.user": username },
-            { "userList.splits": { $elemMatch: { user: otherUserUsername } } },
-          ],
-          $and: [
-            { "userList.payer.user": otherUserUsername },
-            { "userList.splits": { $elemMatch: { user: username } } },
-          ],
-        },
-      })
-      .toArray();
+  const username = req.session.username;
+  const otherUserId = req.params.id;
+  const mongo = await db.connectToDatabase();
+  const otherUserName = await mongo.collection("users").findOne({
+    _id: new ObjectId(otherUserId),
+  });
+  const otherUserUsername = otherUserName.username;
+  const expenses = await mongo
+    .collection("expenses")
+    .find({
+      $or: {
+        $and: [
+          { "userList.payer.user": username },
+          { "userList.splits": { $elemMatch: { user: otherUserUsername } } },
+        ],
+        $and: [
+          { "userList.payer.user": otherUserUsername },
+          { "userList.splits": { $elemMatch: { user: username } } },
+        ],
+      },
+    })
+    .toArray();
 
-    res.json({ expenses });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
-  }
+  res.json({ expenses });
 });
 
 // Get all the users that contain the query in the username
-app.get("/api/users/search", async (req, res) => {
-  try {
-    const user = req.query.q;
-    const mongo = await db.connectToDatabase();
-    const users = await mongo.collection("users").find().toArray();
+app.get("/api/users/search", query("q").escape(), async (req, res) => {
+  const user = req.query.q;
+  const mongo = await db.connectToDatabase();
+  const users = await mongo.collection("users").find().toArray();
 
-    let result = users.find((u) =>
-      u.username.toLowerCase().startsWith(user.toLowerCase())
-    );
+  let result = users.find((u) =>
+    u.username.toLowerCase().startsWith(user.toLowerCase())
+  );
 
-    if (result) {
-      res.json(result);
-    } else {
-      res.status(404).json({ msg: "User not found" });
-    }
-  } catch (error) {
-    console.log("Error:", error);
-    res.status(500).json({ msg: "Internal error", error: error.toString() });
+  if (result) {
+    res.json(result);
+  } else {
+    res.status(404).json({ msg: "User not found" });
   }
 });
 
 // funziona non con budget ma con try.. problemi di routing
 
 // Get all the expenses that contain the query in the description or category
-app.get("/api/try/search", verifyAuthentication, async (req, res) => {
-  try {
+app.get(
+  "/api/try/search",
+  query("q").escape(),
+  verifyAuthentication,
+  async (req, res) => {
     const query = req.query.q;
     const username = req.session.username;
     const mongo = await db.connectToDatabase();
@@ -577,41 +511,28 @@ app.get("/api/try/search", verifyAuthentication, async (req, res) => {
       }
     });
     res.json(results);
-  } catch (error) {
-    console.log("Error:", error);
-    res.status(500).json({ msg: "Internal error", error: error.toString() });
   }
-});
+);
 
 // Get personal information of the logged user
 app.get("/api/info/whoami", verifyAuthentication, async (req, res) => {
-  try {
-    const username = req.session.username;
-    const mongo = await db.connectToDatabase();
-    const userFound = await mongo.collection("users").findOne({
-      username: username,
-    });
-    const name = userFound.name;
-    const surname = userFound.surname;
-    const password = userFound.password;
-    const infos = { username, name, surname, password };
-    res.json(infos);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "Internal error" });
-  }
+  const username = req.session.username;
+  const mongo = await db.connectToDatabase();
+  const userFound = await mongo.collection("users").findOne({
+    username: username,
+  });
+  const name = userFound.name;
+  const surname = userFound.surname;
+  const password = userFound.password;
+  const infos = { username, name, surname, password };
+  res.json(infos);
 });
 
 // Get all the users
 app.get("/api/users", async (req, res) => {
-  try {
-    const mongo = await db.connectToDatabase();
-    const users = await mongo.collection("users").find().toArray();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error(error.stack);
-    res.status(500).json({ msg: error.message });
-  }
+  const mongo = await db.connectToDatabase();
+  const users = await mongo.collection("users").find().toArray();
+  res.status(200).json(users);
 });
 
 // Log out
