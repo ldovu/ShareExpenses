@@ -291,14 +291,11 @@ const app = createApp({
 
     // Load the expenses of the logged user
     async loggedUserExpenses() {
-      try {
-        const username = this.userLogged;
-        const response = await fetch("/api/budget", { method: "GET" });
-        const data = await response.json();
-        this.expenses = data;
-      } catch (error) {
-        console.error("Error:", error);
-      }
+      const username = this.userLogged;
+      const response = await fetch("/api/budget", { method: "GET" });
+      const data = await response.json();
+      this.expenses = data;
+      console.log(this.expenses);
     },
 
     // Confirm add user when split equally in add expense view
@@ -439,7 +436,7 @@ const app = createApp({
       });
       if (response.ok) {
         const data = await response.json();
-        this.message = data.message;
+        this.successMessage = data.message;
         this.expenses.push(data);
       } else {
         const error = await response.json();
@@ -534,189 +531,150 @@ const app = createApp({
 
     // DELETE EXPENSE FROM USERS' EXPENSES
     async deleteExpense(id) {
-      try {
-        const response = await fetch(
-          `/api/budget/${this.year}/${this.month}/${id}`,
-          {
-            method: "DELETE",
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = this.expenses.filter((expense) => expense._id !== id);
-          console.log(this.expenses);
-        } else {
-          const error = await response.json();
-          console.error("Error:", error);
-        }
-      } catch (error) {
+      const username = this.userLogged;
+      console.log("deleteExpense method called");
+      const url = `/api/budget/${id}`;
+      const response = await fetch(url, {
+        method: "DELETE",
+      });
+      console.log(url);
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = this.expenses.filter((expense) => expense._id !== id);
+        console.log(data);
+      } else {
+        const error = await response.json();
         console.error("Error:", error);
       }
     },
 
     // Get all users except the logged one
     async getUsers() {
-      try {
-        const response = await fetch("api/users");
-        const data = await response.json();
-        const userLog = this.userLogged;
+      const response = await fetch("api/users");
+      const data = await response.json();
+      const userLog = this.userLogged;
 
-        data.forEach((user) => {
-          if (
-            user.username !== userLog &&
-            !this.users.includes(user.username)
-          ) {
-            this.users.push(user.username);
-          }
-        });
-        console.log("This.users from get users function", this.users);
-        // this.users = Object.values(this.users);
-        this.errorMessageUser = "";
-        this.errorMessageQuote = "";
-      } catch (error) {
-        console.error("Error:", error);
-      }
+      data.forEach((user) => {
+        if (user.username !== userLog && !this.users.includes(user.username)) {
+          this.users.push(user.username);
+        }
+      });
+      console.log("This.users from get users function", this.users);
+      // this.users = Object.values(this.users);
+      this.errorMessageUser = "";
+      this.errorMessageQuote = "";
     },
-
-
 
     // Get users expenses by year
     async getExpensesByYear() {
-      try {
-        const url = `/api/budget/${this.year}`;
-        const response = await fetch(url, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.year = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const url = `/api/budget/${this.year}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      console.log(url);
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.year = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Get users expenses by year and month
     async getExpensesByYearMonth() {
-      try {
-        const url = `/api/budget/${this.year}/${this.month}`;
-        const response = await fetch(url, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.year = "";
-          this.month = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const url = `/api/budget/${this.year}/${this.month}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.year = "";
+        this.month = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Get users expenses by year, month and id
     async getExpensesByYearMonthId() {
-      try {
-        const response = await fetch(
-          `/api/budget/${this.year}/${this.month}/${this.id}`,
-          {
-            method: "GET",
-          }
-        );
-        if (response.ok) {
-          const expenseYearMonthId = await response.json();
-          this.expenses = expenseYearMonthId;
-          this.year = "";
-          this.month = "";
-          this.id = "";
-        } else {
-          console.error("Error:", await response.text());
+      const response = await fetch(
+        `/api/budget/${this.year}/${this.month}/${this.id}`,
+        {
+          method: "GET",
         }
-      } catch (error) {
-        console.error("Error:", error);
+      );
+      if (response.ok) {
+        const expenseYearMonthId = await response.json();
+        this.expenses = expenseYearMonthId;
+        this.year = "";
+        this.month = "";
+        this.id = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Get users expenses by year and id
     async getExpensesByYearId() {
-      try {
-        const url = `/api/extraFunction1/${this.year}/${this.id}`;
-        const response = await fetch(url, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.year = "";
-          this.id = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const url = `/api/extraFunction1/${this.year}/${this.id}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.year = "";
+        this.id = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Get users expenses by month and id
     async getExpensesByMonthId() {
-      try {
-        const url = `/api/extraFunction2/${this.month}/${this.id}`;
-        const response = await fetch(url, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.month = "";
-          this.id = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const url = `/api/extraFunction2/${this.month}/${this.id}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.month = "";
+        this.id = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Get users expenses by month
     async getExpensesByMonth() {
-      try {
-        const url = `/api/extraFunction3/${this.month}`;
-        const response = await fetch(url, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.month = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const url = `/api/extraFunction3/${this.month}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.month = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Get users expenses by id
     async getExpensesById() {
-      try {
-        const url = `/api/extraFunction4/${this.id}`;
-        const response = await fetch(url, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.id = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const url = `/api/extraFunction4/${this.id}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.id = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
@@ -743,50 +701,46 @@ const app = createApp({
 
     // Function for getting the overall balance of the logged user
     async myBalance() {
-      try {
-        const username = this.userLogged;
-        const response = await fetch("/api/balance", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            //Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          this.expenses = data.expenses;
-          this.amountYouOwe = data.debits;
-          this.amountYouAreOwed = data.credits;
-          this.personalBalance = data.balance;
+      const username = this.userLogged;
+      const response = await fetch("/api/balance", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          //Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        this.expenses = data.expenses;
+        this.amountYouOwe = data.debits;
+        this.amountYouAreOwed = data.credits;
+        this.personalBalance = data.balance;
 
-          this.expenses.forEach((expense) => {
-            // lui ha pagato, quindi deve ricevere soldi
-            if (expense.userList.payer.user === username) {
-              expense.userList.splits.forEach((split) => {
-                this.detailsCredits.push({
-                  user: split.user,
+        this.expenses.forEach((expense) => {
+          // lui ha pagato, quindi deve ricevere soldi
+          if (expense.userList.payer.user === username) {
+            expense.userList.splits.forEach((split) => {
+              this.detailsCredits.push({
+                user: split.user,
+                quote: split.quote,
+              });
+            });
+          }
+          // lui è il beneficiario, quindi deve dare soldi
+          else {
+            expense.userList.splits.forEach((split) => {
+              if (split.user === username) {
+                this.detailsDebits.push({
+                  user: expense.userList.payer.user,
                   quote: split.quote,
                 });
-              });
-            }
-            // lui è il beneficiario, quindi deve dare soldi
-            else {
-              expense.userList.splits.forEach((split) => {
-                if (split.user === username) {
-                  this.detailsDebits.push({
-                    user: expense.userList.payer.user,
-                    quote: split.quote,
-                  });
-                }
-              });
-            }
-          });
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error(error);
+              }
+            });
+          }
+        });
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
@@ -798,102 +752,86 @@ const app = createApp({
 
     // Function for getting the balance in relation to the id
     async balanceInRelationToId() {
-      try {
-        const username = this.userLogged;
-        const otherUsername = this.otherUser;
-        this.id = this.fromUserToId(otherUsername);
-        const response = await fetch(`/api/balance/${this.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const username = this.userLogged;
+      const otherUsername = this.otherUser;
+      this.id = this.fromUserToId(otherUsername);
+      const response = await fetch(`/api/balance/${this.id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(username);
+      console.log(otherUsername);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        this.expenses = data.expenses;
+
+        this.expenses.forEach((expense) => {
+          if (expense.userList.payer.user === username) {
+            expense.userList.splits.forEach((split) => {
+              if (split.user === otherUsername) {
+                this.detailsCreditsTowardsId.push({
+                  user: otherUsername,
+                  quote: split.quote,
+                });
+              }
+            });
+          } else if (expense.userList.payer.user === otherUsername) {
+            expense.userList.splits.forEach((split) => {
+              if (split.user === username) {
+                this.detailsDebitsTowardsId.push({
+                  user: otherUsername,
+                  quote: split.quote,
+                });
+              }
+            });
+          }
         });
-        console.log(username);
-        console.log(otherUsername);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          this.expenses = data.expenses;
-
-          this.expenses.forEach((expense) => {
-            if (expense.userList.payer.user === username) {
-              expense.userList.splits.forEach((split) => {
-                if (split.user === otherUsername) {
-                  this.detailsCreditsTowardsId.push({
-                    user: otherUsername,
-                    quote: split.quote,
-                  });
-                }
-              });
-            } else if (expense.userList.payer.user === otherUsername) {
-              expense.userList.splits.forEach((split) => {
-                if (split.user === username) {
-                  this.detailsDebitsTowardsId.push({
-                    user: otherUsername,
-                    quote: split.quote,
-                  });
-                }
-              });
-            }
-          });
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error(error);
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Function for getting the expenses by query
     async getExpensesByQuery() {
-      try {
-        const response = await fetch(`/api/try/search?q=${this.expenseQuery}`);
-        if (response.ok) {
-          const data = await response.json();
-          this.expenses = data;
-          this.expenseQuery = "";
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error(error);
+      const response = await fetch(`/api/try/search?q=${this.expenseQuery}`);
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.expenseQuery = "";
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Function for getting the users by query
     async getUsersByQuery() {
-      try {
-        const response = await fetch(`/api/users/search?q=${this.query}`, {
-          method: "GET",
-        });
-        if (response.ok) {
-          const data = await response.json();
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error(error);
+      const response = await fetch(`/api/users/search?q=${this.query}`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 
     // Function for getting the personal information of the logged user
     async getPersonalInformation() {
-      try {
-        const username = this.userLogged;
-        const response = await fetch("/api/info/whoami");
+      const username = this.userLogged;
+      const response = await fetch("/api/info/whoami");
 
-        if (response.ok) {
-          const personalInfo = await response.json();
-          this.name = personalInfo.name;
-          this.surname = personalInfo.surname;
-          this.username = personalInfo.username;
-          this.password = personalInfo.password;
-        } else {
-          console.error("Error:", await response.text());
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      if (response.ok) {
+        const personalInfo = await response.json();
+        this.name = personalInfo.name;
+        this.surname = personalInfo.surname;
+        this.username = personalInfo.username;
+        this.password = personalInfo.password;
+      } else {
+        console.error("Error:", await response.text());
       }
     },
 

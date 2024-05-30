@@ -377,25 +377,30 @@ app.put(
   }
 );
 
-// Delete the expense for the specified year, month and id
-app.delete(
-  "/api/budget/:year/month/:id",
-  verifyAuthentication,
-  async (req, res) => {
-    const mongo = await db.connectToDatabase();
-    const year = req.params.year;
-    const month = req.params.month;
-    const id = req.params.id;
-    const result = await mongo
-      .collection("expenses")
-      .deleteOne({ _id: new ObjectId(id), year: year, month: month });
-    if (result.deletedCount === 0) {
-      res.status(404).json({ msg: "Expense not found" });
-    } else {
-      res.json({ msg: "Expense deleted successfully" });
-    }
+// Delete the expense for the specified  id
+app.delete("/api/budget/:id", verifyAuthentication, async (req, res) => {
+  const mongo = await db.connectToDatabase();
+  const username = req.session.username;
+
+  const id = req.params.id;
+  const result = await mongo.collection("expenses").deleteOne({
+    $and: [
+      {
+        $or: [
+          { "userList.payer.user": username },
+          { "userList.splits": { $elemMatch: { user: username } } },
+        ],
+      },
+      { _id: new ObjectId(id) },
+    ],
+  });
+
+  if (result.deletedCount === 0) {
+    res.status(404).json({ msg: "Expense not found" });
+  } else {
+    res.json({ msg: "Expense deleted successfully" });
   }
-);
+});
 
 // Get the overall balance of the logged user
 app.get("/api/balance", verifyAuthentication, async (req, res) => {
