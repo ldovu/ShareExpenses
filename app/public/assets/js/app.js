@@ -176,7 +176,7 @@ const app = createApp({
       if (view === "personalInformation") {
         this.getPersonalInformation();
       }
-      if (view === "addExpense"){
+      if (view === "addExpense") {
         this.successMessage = "";
         this.errorMessage = "";
       }
@@ -195,6 +195,36 @@ const app = createApp({
       this.passwordVisible = !this.passwordVisible;
     },
 
+    // Register function
+    async signup() {
+      console.log("signup method called");
+      const newUserCredentials = {
+        name: this.name,
+        surname: this.surname,
+        username: this.username,
+        password: this.password,
+      };
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUserCredentials),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.successMessage = data.message;
+      } else {
+        const error = await response.json();
+        this.errorMessage = error.message;
+        console.error("Error:", error.message);
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 3000);
+        this.switchView("register");
+      }
+    },
     // Login function
     async signin() {
       const userCredentials = {
@@ -234,16 +264,6 @@ const app = createApp({
       }
     },
 
-    async getVerifica() {
-      const response = await fetch("api/verifica");
-      if (response.ok) {
-        const username = await response.json();
-        console.log("req.session.username: ", username);
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
     // Get all the users existing in the database
     async getAllUser() {
       try {
@@ -257,40 +277,21 @@ const app = createApp({
       }
     },
 
-    // Register function
-    async signup() {
-      console.log("signup method called");
+    // Get all users except the logged one
+    async getUsers() {
+      const response = await fetch("api/users");
+      const data = await response.json();
+      const userLog = this.userLogged;
 
-      const newUserCredentials = {
-        name: this.name,
-        surname: this.surname,
-        username: this.username,
-        password: this.password,
-      };
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUserCredentials),
+      data.forEach((user) => {
+        if (user.username !== userLog && !this.users.includes(user.username)) {
+          this.users.push(user.username);
+        }
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        this.successMessage = data.message;
-      } else if (response.status === 409) {
-        const error = await response.json();
-        this.errorMessage = error.message;
-        console.error("Error:", error.message);
-        setTimeout(() => {
-          this.errorMessage = "";
-        }, 3000);
-        this.switchView("register");
-      } else if (response.status === 400) {
-        const error = await response.json();
-        this.errorMessage = error.message;
-        console.error("Error:", error.message);
-      }
+      console.log("This.users from get users function", this.users);
+      // this.users = Object.values(this.users);
+      this.errorMessageUser = "";
+      this.errorMessageQuote = "";
     },
 
     // Load the expenses of the logged user
@@ -300,6 +301,149 @@ const app = createApp({
       const data = await response.json();
       this.expenses = data;
       console.log(this.expenses);
+    },
+
+    // Get users expenses by year
+    async getExpensesByYear() {
+      const url = `/api/budget/${this.year}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      console.log(url);
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.year = "";
+      } else {
+        console.error("Error:", await response.message);
+      }
+    },
+
+    // Get users expenses by year and month
+    async getExpensesByYearMonth() {
+      const url = `/api/budget/${this.year}/${this.month}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.year = "";
+        this.month = "";
+      } else {
+        console.error("Error:", await response.text());
+      }
+    },
+
+    // Get users expenses by year, month and id
+    async getExpensesByYearMonthId() {
+      const response = await fetch(
+        `/api/budget/${this.year}/${this.month}/${this.id}`,
+        {
+          method: "GET",
+        }
+      );
+      if (response.ok) {
+        const expenseYearMonthId = await response.json();
+        this.expenses = expenseYearMonthId;
+        this.year = "";
+        this.month = "";
+        this.id = "";
+      } else {
+        console.error("Error:", await response.message);
+        this.expenses = [];
+        this.id = "";
+      }
+    },
+
+    // Get users expenses by year and id
+    async getExpensesByYearId() {
+      const url = `/api/extraFunction1/${this.year}/${this.id}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.year = "";
+        this.id = "";
+      } else {
+        console.error("Error:", await response.message);
+        this.expenses = [];
+        this.id = "";
+      }
+    },
+
+    // Get users expenses by month and id
+    async getExpensesByMonthId() {
+      const url = `/api/extraFunction2/${this.month}/${this.id}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.month = "";
+        this.id = "";
+      } else {
+        console.error("Error:", await response.message);
+        this.expenses = [];
+        this.id = "";
+      }
+    },
+
+    // Get users expenses by month
+    async getExpensesByMonth() {
+      const url = `/api/extraFunction3/${this.month}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.month = "";
+      } else {
+        console.error("Error:", await response.text());
+      }
+    },
+
+    // Get users expenses by id
+    async getExpensesById() {
+      const url = `/api/extraFunction4/${this.id}`;
+      const response = await fetch(url, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.expenses = data;
+        this.id = "";
+      } else {
+        const error = await response.json();
+        console.log(error.message);
+        this.expenses = [];
+        this.id = "";
+      }
+    },
+
+    // Function that filter the form to get the expenses and output the result
+    getUserExpenses() {
+      if (this.year && this.month && this.id) {
+        this.getExpensesByYearMonthId();
+      } else if (this.month && this.year) {
+        this.getExpensesByYearMonth();
+      } else if (this.id && this.year) {
+        this.getExpensesByYearId();
+      } else if (this.id && this.month) {
+        this.getExpensesByMonthId();
+      } else if (this.year) {
+        this.getExpensesByYear();
+      } else if (this.month) {
+        this.getExpensesByMonth();
+      } else if (this.id) {
+        this.getExpensesById();
+      } else {
+        console.log("Insufficient parameter");
+      }
     },
 
     // Confirm add user when split equally in add expense view
@@ -325,9 +469,6 @@ const app = createApp({
         });
         this.usersList.payer.user = this.userLogged;
         this.usersList.payer.quote = sameQuote;
-
-        // console.log(JSON.parse(JSON.stringify(this.usersList.payer)));
-        // console.log(JSON.parse(JSON.stringify(this.usersList.splits)));
 
         this.username = "";
       }
@@ -390,62 +531,66 @@ const app = createApp({
 
     // Add expense function
     async addExpense() {
-      const newExpense = {
-        day: this.day,
-        month: this.month,
-        year: this.year,
-        description: this.description,
-        category: this.category,
-        totalCost: this.totalCost,
-        usersList: {
-          payer: this.usersList.payer,
-          splits: this.usersList.splits,
-        },
-      };
+      try {
+        const newExpense = {
+          day: this.day,
+          month: this.month,
+          year: this.year,
+          description: this.description,
+          category: this.category,
+          totalCost: this.totalCost,
+          usersList: {
+            payer: this.usersList.payer,
+            splits: this.usersList.splits,
+          },
+        };
 
-      let totalQuote = this.usersList.payer.quote;
-      this.usersList.splits.forEach((user) => {
-        totalQuote += user.quote;
-      });
+        let totalQuote = this.usersList.payer.quote;
+        this.usersList.splits.forEach((user) => {
+          totalQuote += user.quote;
+        });
 
-      if (this.splitDifferently && this.totalCost != totalQuote) {
-        console.error("Error: Total cost and sum of quotes do not match.");
-        this.errorMessage = "Total cost exceeds the sum of quotes.";
-        this.quotePayer = "";
-        this.personalizedQuote = "";
-        this.usersList.splits = [];
-        this.listSplitsDifferentQuote = [];
-        this.listSplitsSameQuote = [];
-        return;
-      }
-      if (
-        this.day == "" ||
-        this.month == "" ||
-        this.year == "" ||
-        this.description == "" ||
-        this.category == ""
-      ) {
-        console.error("Error: Empty fields.");
-        this.errorMessage = "Fill all the fields";
-        return;
-      }
+        if (this.splitDifferently && this.totalCost != totalQuote) {
+          console.error("Error: Total cost and sum of quotes do not match.");
+          this.errorMessage = "Total cost exceeds the sum of quotes.";
+          this.quotePayer = "";
+          this.personalizedQuote = "";
+          this.usersList.splits = [];
+          this.listSplitsDifferentQuote = [];
+          this.listSplitsSameQuote = [];
+          return;
+        }
+        if (
+          this.day == "" ||
+          this.month == "" ||
+          this.year == "" ||
+          this.description == "" ||
+          this.category == ""
+        ) {
+          console.error("Error: Empty fields.");
+          this.errorMessage = "Fill all the fields";
+          return;
+        }
 
-      const url = `/api/budget/${this.year}/${this.month}`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newExpense),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.successMessage = data.message;
-        this.expenses.push(data);
-      } else {
-        const error = await response.json();
-        this.errorMessage = error.message;
-        console.error("Error:", error.message);
+        const url = `/api/budget/${this.year}/${this.month}`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newExpense),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          this.successMessage = data.message;
+          this.expenses.push(data.result);
+        } else {
+          const error = await response.json();
+          this.errorMessage = error.message;
+          console.error("Error:", error.message);
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
     },
 
@@ -467,13 +612,14 @@ const app = createApp({
       };
 
       let totalQuote = this.copyExpense.userList.payer.quote;
-      console.log("payer: ", totalQuote);
       this.copyExpense.userList.splits.forEach((user) => {
         totalQuote += user.quote;
       });
       if (this.copyExpense.totalCost != totalQuote) {
-        this.errorMessage = "Total cost exceeds the sum of quotes.";
-
+        this.errorMessage = "Total cost differs from sum of quotes.";
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 5000);
         return;
       }
       if (
@@ -486,7 +632,9 @@ const app = createApp({
       ) {
         console.error("Error: Empty fields.");
         this.errorMessage = "Fill all the fields";
-
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 5000);
         return;
       }
 
@@ -516,6 +664,9 @@ const app = createApp({
         if (index !== -1) {
           this.expenses[index] = this.updatedExpense;
         }
+        setTimeout(() => {
+          this.successMessage = "";
+        }, 5000);
         this.day = "";
         this.month = "";
         this.year = "";
@@ -552,157 +703,6 @@ const app = createApp({
       }
     },
 
-    // Get all users except the logged one
-    async getUsers() {
-      const response = await fetch("api/users");
-      const data = await response.json();
-      const userLog = this.userLogged;
-
-      data.forEach((user) => {
-        if (user.username !== userLog && !this.users.includes(user.username)) {
-          this.users.push(user.username);
-        }
-      });
-      console.log("This.users from get users function", this.users);
-      // this.users = Object.values(this.users);
-      this.errorMessageUser = "";
-      this.errorMessageQuote = "";
-    },
-
-    // Get users expenses by year
-    async getExpensesByYear() {
-      const url = `/api/budget/${this.year}`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      console.log(url);
-      if (response.ok) {
-        const data = await response.json();
-        this.expenses = data;
-        this.year = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Get users expenses by year and month
-    async getExpensesByYearMonth() {
-      const url = `/api/budget/${this.year}/${this.month}`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.expenses = data;
-        this.year = "";
-        this.month = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Get users expenses by year, month and id
-    async getExpensesByYearMonthId() {
-      const response = await fetch(
-        `/api/budget/${this.year}/${this.month}/${this.id}`,
-        {
-          method: "GET",
-        }
-      );
-      if (response.ok) {
-        const expenseYearMonthId = await response.json();
-        this.expenses = expenseYearMonthId;
-        this.year = "";
-        this.month = "";
-        this.id = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Get users expenses by year and id
-    async getExpensesByYearId() {
-      const url = `/api/extraFunction1/${this.year}/${this.id}`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.expenses = data;
-        this.year = "";
-        this.id = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Get users expenses by month and id
-    async getExpensesByMonthId() {
-      const url = `/api/extraFunction2/${this.month}/${this.id}`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.expenses = data;
-        this.month = "";
-        this.id = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Get users expenses by month
-    async getExpensesByMonth() {
-      const url = `/api/extraFunction3/${this.month}`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.expenses = data;
-        this.month = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Get users expenses by id
-    async getExpensesById() {
-      const url = `/api/extraFunction4/${this.id}`;
-      const response = await fetch(url, {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.expenses = data;
-        this.id = "";
-      } else {
-        console.error("Error:", await response.text());
-      }
-    },
-
-    // Function that filter the form to get the expenses and output the result
-    getUserExpenses() {
-      if (this.year && this.month && this.id) {
-        this.getExpensesByYearMonthId();
-      } else if (this.month && this.year) {
-        this.getExpensesByYearMonth();
-      } else if (this.id && this.year) {
-        this.getExpensesByYearId();
-      } else if (this.id && this.month) {
-        this.getExpensesByMonthId();
-      } else if (this.year) {
-        this.getExpensesByYear();
-      } else if (this.month) {
-        this.getExpensesByMonth();
-      } else if (this.id) {
-        this.getExpensesById();
-      } else {
-        console.log("Insufficient parameter");
-      }
-    },
-
     // Function for getting the overall balance of the logged user
     async myBalance() {
       const username = this.userLogged;
@@ -710,7 +710,6 @@ const app = createApp({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          //Authorization: `Bearer ${token}`,
         },
       });
       if (response.ok) {

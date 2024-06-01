@@ -67,6 +67,13 @@
   cursor: pointer;
 }
 
+.mb-custom {
+  margin-bottom: 1px;
+}
+.mt-custom {
+  margin-top: 1px;
+}
+
 .alert-message {
   color: #721c24;
   background-color: #f8d7da;
@@ -78,7 +85,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2px;
 }
 
 .form-signin {
@@ -127,7 +133,6 @@
   border-radius: 5px;
   box-sizing: border-box;
   width: 100%;
-  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -248,13 +253,36 @@ header li {
   font-size: 14px;
 }
 
-.alert-danger {
-  width: 100%;
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  gap: 10px;
+}
+
+.alert {
+  margin: 0;
   padding: 6px 16px;
   border: 1px solid rgba(27, 31, 35, 0.15);
   font-size: 14px;
   line-height: 20px;
-  margin-top: 14px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 header a {

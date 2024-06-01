@@ -741,6 +741,26 @@
                               </form>
                             </div>
                             <div class="modal-footer">
+                              <span v-if="successMessage">
+                                <div class="alert alert-success" role="alert">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    class="bi bi-check-circle-fill"
+                                    viewBox="0 0 16 16"
+                                    style="padding-right: 5px"
+                                  >
+                                    <path
+                                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                                    />
+                                  </svg>
+
+                                  {{ successMessage }}
+                                </div>
+                              </span>
+
                               <span v-if="errorMessage">
                                 <div class="alert alert-danger" role="alert">
                                   <svg
@@ -1082,7 +1102,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-custom">
                       <button
                         type="button"
                         @click="switchView('userExpenses')"
@@ -1116,7 +1136,7 @@
                       </button>
                     </div>
                   </div>
-                  <div class="row justify-content-center mt-3">
+                  <div class="row justify-content-center mt-custom">
                     <div class="alert-class">
                       <span v-if="errorMessage" class="alert-message">
                         <svg
@@ -1144,7 +1164,7 @@
                             fill="currentColor"
                             class="bi bi-check-circle-fill"
                             viewBox="0 0 16 16"
-                            style="padding-right: 1px"
+                            style="padding-right: 5px"
                           >
                             <path
                               d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
@@ -1444,14 +1464,14 @@
               <h2 class="mb-3" id="aboutTitle">About...</h2>
               <p>
                 This is a single-page web application for tracking the expenses
-                in small group of person (as friends and family). The app allows
-                you to:
+                in small group of people (like friends and family). The
+                application allows you to:
               </p>
               <ul>
                 <li>Filter, search, modify and delete your expenses</li>
                 <li>
-                  Add an expense and split the cost equally or differently among
-                  the users
+                  Add an expense by dividing the total cost equally or
+                  differently between the users
                 </li>
                 <li>
                   Check your personal balance and the balance towards a specific

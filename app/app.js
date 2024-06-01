@@ -4,7 +4,6 @@ const { ObjectId } = require("mongodb");
 const { query } = require("express-validator");
 const db = require("./db.js");
 const session = require("express-session");
-const { collection } = require("@dicebear/avatars/dist/color/index.js");
 const app = express();
 
 app.use(express.static(`${__dirname}/public`));
@@ -17,7 +16,9 @@ app.use(
 );
 app.use(express.urlencoded());
 
-////////////////////// INITIALIZE DATABASE //////////////////////
+
+
+////////////////////// INITIALIZE DATABASE SCRIPT //////////////////////
 
 // Function to get a random element from an array
 function getRandomElement(arr) {
@@ -136,6 +137,7 @@ async function initializeDatabase() {
   }
 }
 ////////////////////// END INITIALIZE DATABASE //////////////////////
+
 
 // Function for signing up
 app.post("/api/auth/signup", async (req, res) => {
@@ -266,6 +268,10 @@ app.get("/api/budget/:year/:month/:id", async (req, res) => {
   const year = req.params.year;
   const month = req.params.month;
   const id = req.params.id;
+  // Check if the id is a valid ObjectId
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
   const expenses = await mongo
     .collection("expenses")
     .find({
@@ -299,6 +305,10 @@ app.get(
     const username = req.session.username;
     const year = req.params.year;
     const id = req.params.id;
+    // Check if the id is a valid ObjectId
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
     const expenses = await mongo
       .collection("expenses")
       .find({
@@ -332,6 +342,10 @@ app.get(
     const username = req.session.username;
     const month = req.params.month;
     const id = req.params.id;
+    // Check if the id is a valid ObjectId
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
     const expenses = await mongo
       .collection("expenses")
       .find({
@@ -387,6 +401,11 @@ app.get("/api/extraFunction4/:id", verifyAuthentication, async (req, res) => {
   const mongo = await db.connectToDatabase();
   const username = req.session.username;
   const id = req.params.id;
+
+  // Check if the id is a valid ObjectId
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
   const expenses = await mongo
     .collection("expenses")
     .find({
@@ -402,9 +421,6 @@ app.get("/api/extraFunction4/:id", verifyAuthentication, async (req, res) => {
     })
     .toArray();
 
-  if (expenses.length === 0 || !expenses) {
-    res.status(404).json({ message: "Expense not found" });
-  }
   res.json(expenses);
 });
 
@@ -435,20 +451,25 @@ app.post(
       day > 31
     ) {
       return res.status(400).json({ message: "All fields must be filled" });
+    } else if (year != "" && month != "") {
+      const mongo = await db.connectToDatabase();
+      const expense = {
+        year,
+        month,
+        day,
+        description,
+        category,
+        totalCost,
+        userList,
+      };
+      result = await mongo.collection("expenses").insertOne(expense);
+      console.log(result);
+      res
+        .status(200)
+        .json({ message: "Expense added successfully", result: result });
+    } else {
+      res.status(400).json({ message: "Invalid fields" });
     }
-    const mongo = await db.connectToDatabase();
-    const expense = {
-      year,
-      month,
-      day,
-      description,
-      category,
-      totalCost,
-      userList,
-    };
-    result = await mongo.collection("expenses").insertOne(expense);
-    console.log(result);
-    return { message: "Expense created successfully" };
   }
 );
 
@@ -610,7 +631,6 @@ app.get("/api/users/search", query("q").escape(), async (req, res) => {
 });
 
 // funziona non con budget ma con try.. problemi di routing
-
 // Get all the expenses that contain the query in the description or category
 app.get(
   "/api/try/search",
