@@ -15,7 +15,9 @@
   justify-content: center;
   align-items: center;
   overflow: auto;
+  margin-top: 10px;
 }
+
 @media (max-height: 600px) {
   .container-login {
     height: auto;
@@ -73,15 +75,14 @@
   border-radius: 5px;
   box-sizing: border-box;
   width: 100%;
-  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2px;
 }
 
 .form-signin {
   height: 175px;
-
   overflow: auto;
   align-items: center;
   border: 1px solid lightgray; /* border light gray */
@@ -102,6 +103,7 @@
   justify-content: center;
   align-items: center;
   overflow: auto;
+  margin-top: 10px;
 }
 
 .form-signup {
@@ -109,8 +111,8 @@
   min-width: 300px;
   width: 100%;
   align-items: center;
-  border: 1px solid lightgray; 
-  background-color: #f9f9f9; 
+  border: 1px solid lightgray;
+  background-color: #f9f9f9;
   border-radius: 5px;
   padding: 20px;
   margin: auto;
@@ -130,6 +132,7 @@
   justify-content: center;
   align-items: center;
 }
+
 @media (max-height: 600px) {
   .container-registration {
     height: auto;
@@ -138,6 +141,16 @@
   .form-signup,
   .alert {
     padding: 10px;
+  }
+}
+
+@media (max-height: 200px) {
+  header {
+    padding: 1rem;
+  }
+  .d-flex {
+    flex-direction: row;
+    align-items: center;
   }
 }
 
@@ -183,7 +196,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 8vh; 
+  height: 8vh;
 }
 
 .dropdown-profile {
@@ -222,17 +235,17 @@
 }
 
 .dropdown-profile {
-  padding: 4px 10px; 
+  padding: 4px 10px;
   font-size: 12px;
 }
 
 .smaller-button {
-  padding: 6px 8px; 
-  font-size: 12px; 
+  padding: 6px 8px;
+  font-size: 12px;
 }
 header button,
 header li {
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 .alert-danger {
@@ -319,7 +332,7 @@ header .nav-item a:not(.dropdown-item),
   word-wrap: break-word;
   text-align: center;
   margin-right: 2px;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 header .nav-item a:not(.dropdown-item):hover,
@@ -346,6 +359,14 @@ header .nav-item a:not(.dropdown-item):focus,
 .back-button:focus {
   outline: 1px transparent;
 }
+@media (max-width: 600px) {
+  header.p-3.mb-3.border-bottom {
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+  }
+}
 
 .col-12 .span-search-input {
   font-size: 14px;
@@ -371,7 +392,7 @@ header .nav-item a:not(.dropdown-item):focus,
   padding: 4.8px;
 }
 
-@media screen and (max-width: 600px) {
+@media (max-width: 600px) {
   .table {
     width: 50%;
     margin-left: 0px;
@@ -381,7 +402,7 @@ header .nav-item a:not(.dropdown-item):focus,
 
 .container-filter-sm,
 .table-responsive {
-  max-width: 60%; 
+  max-width: 60%;
   margin-right: auto;
   margin-left: auto;
 }
@@ -392,21 +413,21 @@ header .nav-item a:not(.dropdown-item):focus,
 @media (min-width: 576px) {
   .container-filter-sm,
   .table-responsive {
-    max-width: 100%; 
+    max-width: 100%;
   }
 }
 
 @media (min-width: 768px) {
   .container-filter-sm,
   .table-responsive {
-    max-width: 600px; 
+    max-width: 600px;
   }
 }
 
 @media (min-width: 992px) {
   .container-filter-sm,
   .table-responsive {
-    max-width: 800px; /
+    max-width: 800px;
   }
 }
 
@@ -460,7 +481,6 @@ a.nav-link {
   padding-right: 0;
 }
 
-
 /* add expense element */
 .confirm-add-user-button {
   padding: 6px 10px;
@@ -473,18 +493,17 @@ a.nav-link {
   justify-content: center;
 }
 
-
 /* Submit button used in many view of the app */
 .submit-button {
   appearance: none;
   backface-visibility: hidden;
-  background-color: #047bfb; 
+  background-color: #047bfb;
   border: 1px solid rgba(27, 31, 35, 0.15);
   border-radius: 6px;
   box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
     rgba(255, 255, 255, 0.25) 0 1px 0 inset;
   box-sizing: border-box;
-  color: #eaf6f8; 
+  color: #eaf6f8;
   cursor: pointer;
   font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue",
     Ubuntu, sans-serif;
@@ -505,14 +524,14 @@ a.nav-link {
 }
 
 .submit-button:disabled {
-  background-color: #3373aa; 
+  background-color: #3373aa;
   border-color: rgba(27, 31, 35, 0.15);
   color: #959da5;
   cursor: default;
 }
 
 .submit-button:hover {
-  background-color: #1f74ca; 
+  background-color: #1f74ca;
   text-decoration: none;
   transition-duration: 0.1s;
 }

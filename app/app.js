@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const { query } = require("express-validator");
 const db = require("./db.js");
 const session = require("express-session");
+const { collection } = require("@dicebear/avatars/dist/color/index.js");
 const app = express();
 
 app.use(express.static(`${__dirname}/public`));
@@ -15,6 +16,126 @@ app.use(
   })
 );
 app.use(express.urlencoded());
+
+////////////////////// INITIALIZE DATABASE //////////////////////
+
+// Function to get a random element from an array
+function getRandomElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Function to get a random number between min and max (inclusive)
+function getRandomNumber(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+async function initializeDatabase() {
+  const mongo = await db.connectToDatabase();
+  await mongo.collection("users").insertOne({
+    name: "Ludo",
+    surname: "Caiola",
+    username: "ludo",
+    password: "ciao",
+  });
+  await mongo.collection("users").insertOne({
+    name: "Aurelia",
+    surname: "Caiola",
+    username: "aure",
+    password: "ciao",
+  });
+  await mongo.collection("users").insertOne({
+    name: "Matteo",
+    surname: "Caiola",
+    username: "matte",
+    password: "ciao",
+  });
+
+  await mongo.collection("users").insertOne({
+    name: "Giulia",
+    surname: "Ribolli",
+    username: "giulia",
+    password: "ciao",
+  });
+  await mongo.collection("users").insertOne({
+    name: "Luca",
+    surname: "Biancotto",
+    username: "luca",
+    password: "ciao",
+  });
+  await mongo.collection("users").insertOne({
+    name: "Roberta",
+    surname: "Giannelli",
+    username: "robi",
+    password: "ciao",
+  });
+  await mongo.collection("users").insertOne({
+    name: "Federico",
+    surname: "Rossi",
+    username: "fede",
+    password: "ciao",
+  });
+
+  const years = ["2022", "2023", "2024"];
+  const months = [];
+  for (let i = 1; i <= 12; i++) {
+    months.push(i.toString());
+  }
+  const days = [];
+  for (let i = 1; i <= 31; i++) {
+    days.push(i);
+  }
+  const descriptions = [
+    "Spesa",
+    "Festa compleanno",
+    "Campeggio Croazia",
+    "Regalo Mamma",
+    "Cena ristorante",
+    "Aperitivo Milano",
+  ];
+  const categories = [
+    "Spesa",
+    "Svago",
+    "Vacanza",
+    "Regalo",
+    "Cena",
+    "Aperitivo",
+  ];
+
+  const minimumDigit = 10;
+  const maximumDigit = 100;
+
+  const users = await mongo.collection("users").find().toArray();
+
+  for (let i = 0; i < descriptions.length; i++) {
+    let payer = getRandomElement(users).username;
+    let splitsNum = Math.floor(getRandomNumber(1, 8));
+    let amount = getRandomNumber(minimumDigit, maximumDigit).toFixed(1);
+    let quote = (amount / splitsNum).toFixed(2);
+
+    const otherUsers = users.filter((user) => user.username !== payer);
+    const splits = otherUsers.slice(0, splitsNum).map((user) => ({
+      user: user.username,
+      quote: quote,
+    }));
+
+    await mongo.collection("expenses").insertOne({
+      day: getRandomElement(days),
+      month: getRandomElement(months),
+      year: getRandomElement(years),
+      description: descriptions[i],
+      category: categories[i],
+      totalCost: amount,
+      userList: {
+        payer: {
+          user: payer,
+          quote: quote,
+        },
+        splits: splits,
+      },
+    });
+  }
+}
+////////////////////// END INITIALIZE DATABASE //////////////////////
 
 // Function for signing up
 app.post("/api/auth/signup", async (req, res) => {
@@ -281,6 +402,9 @@ app.get("/api/extraFunction4/:id", verifyAuthentication, async (req, res) => {
     })
     .toArray();
 
+  if (expenses.length === 0 || !expenses) {
+    res.status(404).json({ message: "Expense not found" });
+  }
   res.json(expenses);
 });
 

@@ -176,6 +176,10 @@ const app = createApp({
       if (view === "personalInformation") {
         this.getPersonalInformation();
       }
+      if (view === "addExpense"){
+        this.successMessage = "";
+        this.errorMessage = "";
+      }
     },
 
     openModal(expense) {
