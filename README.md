@@ -17,15 +17,15 @@ Additionally, Docker was used for containerization.
 
 ## Main Contents
 
-- **`app` folder**: contains the main files of the project
+- `app` **folder**: contains the main files of the project
   - `app.js`: contains the server-side functions of the application written in Node.js
   - `db.js`: contains the function for the connection to MongoDB
-  - **`public` folder**:
+  - `public` **folder**:
     -  `index.html`: main HTML file
-    -  **`assets` folder**:  
-      -  **`css` folder**: contains the `style.css` file
-      -  **`images` folder**: contains the application logo `logoAppWithTitle.png`
-      -  **`js` folder**: contains `app.js`, which implements the client-side of the app in Vue.js 
+    -  `assets` **folder**:  
+      -  `css` **folder**: contains the `style.css` file
+      -  `images` **folder**: contains the application logo `logoAppWithTitle.png`
+      -  `js` **folder**: contains `app.js`, which implements the client-side of the app in Vue.js 
 - `DockerFile` and `docker-compose.yml`: files used to set up and run the application with Docker
 
 
