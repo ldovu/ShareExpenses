@@ -51,7 +51,7 @@ Additionally, Docker was used for containerization.
 
 
 
-#### How to use it: #### 
+## How to use it:  
 1. Clone this Repository 
 2. Open it in Visual Studio Code 
 3. Open Docker Desktop in your computer
