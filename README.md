@@ -3,9 +3,12 @@
 
 This project was done for the exam of "Programmazione Web" (Prof. Andrea De Lorenzo, 2023) at the University of Trieste.
 
+
 ## Description
 
-Share expenses is a web application implemented as follows: 
+Share Expenses is a web application for tracking and splitting expenses with small groups of people, such as friends and family.
+
+Share Expenses was implemented as follows: 
 - Server-side: written in Node.js
 - Client-side: developed using Vue.js, HTML and CSS
 
