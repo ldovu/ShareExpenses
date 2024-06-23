@@ -68,6 +68,10 @@ const app = createApp({
       copyExpense: {},
 
       openedModal: false,
+
+      newSplitsInModifiedExpense: [],
+      listSplitsSameQuoteModifyExpense: [],
+      listSplitsDifferentQuoteModifyExpense: [],
     };
   },
   mounted() {},
@@ -188,6 +192,11 @@ const app = createApp({
 
     closeModal() {
       this.copyExpense = {};
+      this.listSplitsSameQuote = [];
+      this.listSplitsDifferentQuote = [];
+      this.splitEqually = false;
+      this.splitDifferently = false;
+
       this.loggedUserExpenses();
     },
 
@@ -279,12 +288,50 @@ const app = createApp({
 
     // Get all users except the logged one
     async getUsers() {
+      console.log("getUsers method called");
+
       const response = await fetch("api/users");
       const data = await response.json();
       const userLog = this.userLogged;
 
+      // Clear the current users array to avoid duplicates
+      this.users = [];
+
       data.forEach((user) => {
         if (user.username !== userLog && !this.users.includes(user.username)) {
+          this.users.push(user.username);
+        }
+      });
+      console.log("This.users from get users function", this.users);
+      // this.users = Object.values(this.users);
+      this.errorMessageUser = "";
+      this.errorMessageQuote = "";
+    },
+
+    // Exclude the already present users in the splits list
+    async getUsersForModify() {
+      console.log("getUsers method called");
+
+      const response = await fetch("api/users");
+      const data = await response.json();
+      const userLog = this.userLogged;
+
+      // Clear the current users array to avoid duplicates
+      this.users = [];
+      let copyExpenseUserListSplits = [];
+
+      this.copyExpense.userList.splits.forEach((user) => {
+        copyExpenseUserListSplits.push(user.user);
+      });
+      copyExpenseUserListSplits.push(this.copyExpense.userList.payer.user);
+      console.log("CopyExpenseUserListSplits", copyExpenseUserListSplits);
+
+      data.forEach((user) => {
+        if (
+          user.username !== userLog &&
+          !this.users.includes(user.username) &&
+          !copyExpenseUserListSplits.includes(user.username)
+        ) {
           this.users.push(user.username);
         }
       });
@@ -446,6 +493,7 @@ const app = createApp({
       }
     },
 
+    // ------------------- FUNZIONI GIUSTE USATE IN ADD EXEPNSE VIEW -------------------
     // Confirm add user when split equally in add expense view
     confirmAddUserSameQuote() {
       if (this.username === "") {
@@ -505,6 +553,69 @@ const app = createApp({
         this.listSplitsDifferentQuote.push(this.username);
         this.usersList.payer.user = this.userLogged;
         this.usersList.payer.quote = this.quotePayer;
+
+        this.username = "";
+        this.personalizedQuote = "";
+      }
+    },
+
+    // ------------------- Aggiunta la possibilità di ADD user in MODIFY EXPENSE VIEW -------------------
+
+    confirmAddUserSameQuoteModify() {
+      if (this.username === "") {
+        return;
+      }
+      if (this.username !== "") {
+        let sameQuote =
+          this.copyExpense.totalCost /
+          (this.copyExpense.userList.splits.length + 2);
+        if (this.listSplitsSameQuote.includes(this.username)) {
+          this.errorMessageUser = "User already added";
+          return;
+        }
+        this.copyExpense.userList.splits.push({
+          user: this.username,
+          quote: sameQuote,
+        });
+
+        this.listSplitsSameQuote.push(this.username);
+        // aggiornamento dinamico quota
+        this.copyExpense.userList.splits.forEach((user) => {
+          user.quote = sameQuote;
+        });
+
+        this.copyExpense.userList.payer.quote = sameQuote;
+
+        this.username = "";
+      }
+    },
+    confirmAddUserDifferentQuoteModify() {
+      if (this.listSplitsDifferentQuote.includes(this.username)) {
+        this.errorMessageUser = "User already added";
+        return;
+      }
+      if (this.personalizedQuote === "") {
+        this.errorMessageQuote = "Insert a quote";
+        return;
+      }
+      if (this.username === "") {
+        return;
+      }
+
+      if (this.copyExpense.totalCost == 0 && this.personalizedQuote < 0) {
+        console.log("refund applied");
+      }
+      if (
+        this.username !== "" ||
+        this.personalizedQuote !== "" ||
+        this.personalizedQuote < 0
+      ) {
+        this.copyExpense.userList.splits.push({
+          user: this.username,
+          quote: this.personalizedQuote,
+        });
+
+        this.listSplitsDifferentQuote.push(this.username);
 
         this.username = "";
         this.personalizedQuote = "";
@@ -615,6 +726,7 @@ const app = createApp({
       this.copyExpense.userList.splits.forEach((user) => {
         totalQuote += user.quote;
       });
+
       if (this.copyExpense.totalCost != totalQuote) {
         this.errorMessage = "Total cost differs from sum of quotes.";
         setTimeout(() => {
@@ -678,6 +790,11 @@ const app = createApp({
           splits: [],
         };
         this.errorMessage = "";
+        this.errorMessageUser = "";
+        this.listSplitsSameQuote = [];
+        this.listSplitsDifferentQuote = [];
+        this.splitEqually = false;
+        this.splitDifferently = false;
       } else {
         const error = await response.json();
         this.errorMessage = error.message;

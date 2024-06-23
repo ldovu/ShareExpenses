@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share expenses app</title>
 
-    <link rel="shortcut icon" href="#" />
+    <link rel="icon" href="images/logoAppWithTitle.png" type="image/png" />
+    <!-- <link rel="shortcut icon" href="#" /> -->
 
     <!-- ##################  FONTS  ################## -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -738,6 +739,208 @@
                                     <div class="col-md-2 mb-3"></div>
                                   </div>
                                 </div>
+
+                                <!--  ##################  ADD USER AND SPLIT EQUALLY/SPLIT AS YOU WANT  ##################    -->
+                                <div class="row">
+                                  <div class="col-md-2 mb-3"></div>
+                                  <div class="col-md-4 mb-3">
+                                    <button
+                                      @click.prevent="addUsersAndSplitEqually"
+                                      class="button-9"
+                                      role="button"
+                                      style="
+                                        width: 100%;
+                                        white-space: normal;
+                                        word-wrap: break-word;
+                                      "
+                                    >
+                                      Add user and split equally
+                                    </button>
+                                  </div>
+                                  <div class="col-md-4 mb-3">
+                                    <button
+                                      @click.prevent="addUsersAndSplitDifferently"
+                                      class="button-9"
+                                      role="button"
+                                      style="
+                                        width: 100%;
+                                        white-space: normal;
+                                        word-wrap: break-word;
+                                      "
+                                    >
+                                      Add user and split as you want
+                                    </button>
+                                  </div>
+                                  <div class="col-md-2 mb-3"></div>
+                                </div>
+
+                                <!--  ##################  ADD USER AND SPLIT EQUALLY  ##################    -->
+                                <div
+                                  class="container-fluid py-3 full-width-container"
+                                >
+                                  <div v-if="splitEqually" class="mb-3">
+                                    <label for="newUserSame" class="form-label">
+                                      <strong>
+                                        Users to split the expense with: {{
+                                        listSplitsSameQuote.join(', ') }}
+                                      </strong>
+                                    </label>
+                                    <div class="row">
+                                      <div class="col-md-2 mb-3"></div>
+                                      <div class="col-md-6 mb-3">
+                                        <div class="input-group mb-3">
+                                          <select
+                                            class="form-control form-control-sm"
+                                            v-model="username"
+                                            @click="getUsersForModify"
+                                          >
+                                            <option
+                                              selected="true"
+                                              disabled="disabled"
+                                              value=""
+                                            >
+                                              Username
+                                            </option>
+                                            <option
+                                              v-for="(user, index) in users"
+                                              :key="index"
+                                              :value="user"
+                                            >
+                                              {{ user }}
+                                            </option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2 mb-3">
+                                        <button
+                                          @click.prevent="confirmAddUserSameQuoteModify"
+                                          class="button-9 confirm-add-user-button"
+                                        >
+                                          Add user
+                                        </button>
+                                      </div>
+                                      <div class="col-md-2 mb-3"></div>
+                                    </div>
+
+                                    <!-- <div class="row align-items-center">
+                                      <div class="col-md-5 mb-3"></div>
+
+                                      <div class="col-md-2 text-center">
+                                        <button
+                                          @click.prevent="confirmAddUserSameQuoteModify"
+                                          class="button-9 confirm-add-user-button"
+                                        >
+                                          Add user
+                                        </button>
+                                      </div>
+                                    </div> -->
+                                  </div>
+
+                                  <div v-if="splitDifferently" class="mb-3">
+                                    <label
+                                      for="newUserDifferent"
+                                      class="form-label"
+                                    >
+                                      <strong>
+                                        User to split the expense with:
+                                        {{listSplitsDifferentQuote.join(',')}}
+                                      </strong>
+                                    </label>
+                                    <div class="row">
+                                      <div class="col-md-2 mb-3"></div>
+                                      <div class="col-md-4 mb-3">
+                                        <select
+                                          class="form-control form-control-sm"
+                                          v-model="username"
+                                          @click="getUsersForModify"
+                                        >
+                                          <option
+                                            selected="true"
+                                            disabled="disabled"
+                                            value=""
+                                          >
+                                            Username
+                                          </option>
+                                          <option
+                                            v-for="(user, index) in users"
+                                            :key="index"
+                                            :value="user"
+                                          >
+                                            {{ user }}
+                                          </option>
+                                        </select>
+                                      </div>
+                                      <div class="col-md-2 mb-3">
+                                        <input
+                                          type="number"
+                                          v-model="personalizedQuote"
+                                          placeholder="0.00 (€)"
+                                          class="form-control form-control-sm"
+                                          step="0.01"
+                                        />
+                                      </div>
+                                      <div class="col-md-2 mb-3">
+                                        <button
+                                          @click.prevent="confirmAddUserDifferentQuoteModify"
+                                          class="button-9 confirm-add-user-button"
+                                        >
+                                          Add user
+                                        </button>
+                                      </div>
+
+                                      <div class="col-md-2 mb-3"></div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                      <div class="col-md-4 mb-3"></div>
+
+                              
+
+                                      <div class="col-md-4 mb-3">
+                                        <span
+                                          v-if="errorMessageUser"
+                                          class="alert-message"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            fill="currentColor"
+                                            class="bi bi-exclamation-triangle-fill"
+                                            viewBox="0 0 16 16"
+                                            style="padding-right: 5px"
+                                          >
+                                            <path
+                                              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+                                            />
+                                          </svg>
+
+                                          {{ errorMessageUser }}
+                                        </span>
+                                        <span
+                                          v-if="errorMessageQuote"
+                                          class="alert-message"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            fill="currentColor"
+                                            class="bi bi-exclamation-triangle-fill"
+                                            viewBox="0 0 16 16"
+                                            style="padding-right: 5px"
+                                          >
+                                            <path
+                                              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"
+                                            />
+                                          </svg>
+                                          {{ errorMessageQuote }}
+                                        </span>
+                                      </div>
+
+                                      <div class="col-md-4 mb-3"></div>
+                                    </div>
+                                  </div>
+                                </div>
                               </form>
                             </div>
                             <div class="modal-footer">
@@ -950,7 +1153,9 @@
                           v-model="username"
                           @click="getUsers"
                         >
-                          <option disabled value="">Username</option>
+                          <option selected="true" disabled="disabled" value="">
+                            Username
+                          </option>
                           <option
                             v-for="(user, index) in users"
                             :key="index"
@@ -1032,7 +1237,9 @@
                           v-model="username"
                           @click="getUsers"
                         >
-                          <option disabled value="">Username</option>
+                          <option selected="true" disabled="disabled" value="">
+                            Username
+                          </option>
                           <option
                             v-for="(user, index) in users"
                             :key="index"
