@@ -14,15 +14,15 @@ Additionally, Docker was used for containerization.
 
 ## Main Contents
 
-- **`app` Folder**: contains the main files of the project
+- **`app` folder**: contains the main files of the project
   - `app.js`: contains the server-side functions of the application written in Node.js
   - `db.js`: contains the function for the connection to MongoDB
-  - **`public` Folder**:
+  - **`public` folder**:
     -  `index.html`: main HTML file
-    -  **`assets` Folder**:  
-      -  **`css` Folder**: contains the `style.css` file
-      -  **`images` Folder**: contains the application logo `logoAppWithTitle.png`
-      -  **`js` Folder**: contains `app.js`, which implements the client-side of the app in Vue.js 
+    -  **`assets` folder**:  
+      -  **`css` folder**: contains the `style.css` file
+      -  **`images` folder**: contains the application logo `logoAppWithTitle.png`
+      -  **`js` folder**: contains `app.js`, which implements the client-side of the app in Vue.js 
 - `DockerFile` and `docker-compose.yml`: files used to set up and run the application with Docker
 
 
@@ -46,12 +46,12 @@ Additionally, Docker was used for containerization.
 ## Main Screenshots
 
 <p align="center">
-  <img src="./Images/LoginScreen.png" alt="Login Screen" width="100"/>
-  <img src="./Images/RegistrationScreen.png" alt="Diet Tab" width="100"/>
+  <img src="./Images/LoginScreen.png" alt="Login Screen" width="300"/>
+  <img src="./Images/RegistrationScreen.png" alt="Diet Tab" width="300"/>
 </p>
 
 <p align="center">
-  <img src="./Images/HomePageScreen.png" alt="Login Screen" width="200"/>
+  <img src="./Images/HomePageScreen.png" alt="Login Screen" width="500"/>
 </p>
 
 
