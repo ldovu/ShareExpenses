@@ -46,12 +46,7 @@ Additionally, Docker was used for containerization.
 ## Main Screenshots
 
 <p align="center">
-  <img src="./Images/LoginScreen.png" alt="Login Screen" height="200" width="370"/>
-  <img src="./Images/RegistrationScreen.png" alt="Diet Tab" height="200" width="370"/>
-</p>
-
-<p align="center">
-  <img src="./Images/HomePageScreen.png" alt="Login Screen" height="250" width="700"/>
+  <img src="./Images/HomePageScreen.png" alt="Login Screen" height="250" width="800"/>
 </p>
 
 
